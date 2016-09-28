@@ -3,4 +3,4 @@ This is a repository created for SWE573 "Software Development Practice" course o
 
 #### Travis Status: [![Build Status](https://travis-ci.org/TalatCikikci/Fall2016Swe573_HealthTracker.svg?branch=master)](https://travis-ci.org/TalatCikikci/Fall2016Swe573_HealthTracker)
 
-#### Coveralls Status: [![Coverage Status](https://coveralls.io/repos/github/TalatCikikci/BuCoopApplication/badge.svg?branch=master)](https://coveralls.io/github/TalatCikikci/BuCoopApplication?branch=master)
+#### Coveralls Status: [![Coverage Status](https://coveralls.io/repos/github/TalatCikikci/Fall2016Swe573_HealthTracker/badge.svg)](https://coveralls.io/github/TalatCikikci/Fall2016Swe573_HealthTracker)
