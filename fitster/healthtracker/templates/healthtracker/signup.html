@@ -1,5 +1,11 @@
+<head>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+
 <div class="container">
-            <form class="form-horizontal" role="form">
+            <form class="form-horizontal" role="form" action="{% url 'healthtracker:registeruser' %}" method="post">
+              {% csrf_token %}
                 <h2>Fitster Registration</h2>
                 <div class="form-group">
                     <label for="firstName" class="col-sm-3 control-label">First Name</label>
