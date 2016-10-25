@@ -18,10 +18,10 @@ class Userprofile(models.Model):
     firstname = models.CharField(max_length=200)
     lastname = models.CharField(max_length=200)
     email = models.EmailField(max_length=200, unique=True)
-    dateofbirth = models.DateTimeField
-    gender = (('M', 'Male'),('F', 'Female'))
-    height = models.IntegerField
-    weight = models.IntegerField
+    dateofbirth = models.DateTimeField()
+    gender = models.CharField(max_length=1, choices=(('M', 'Male'),('F', 'Female')))
+    height = models.IntegerField()
+    weight = models.IntegerField()
 #    avatar = models.ImageField
     notes = models.TextField(blank=True, null=True)
 

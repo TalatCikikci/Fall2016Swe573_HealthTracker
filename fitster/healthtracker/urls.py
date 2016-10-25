@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^registeruser/$', views.registeruser, name='registeruser'),
     url(r'^forgottenpassword/$', views.forgottenpassword, name='forgottenpassword'),
+    url(r'^recoverpassword/$', views.recoverpassword, name='recoverpassword')
 ]
