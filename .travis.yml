@@ -1,7 +1,11 @@
 language: python
 python:
   - "3.5"
+env:
+  - DJANGO_VERSION=1.10.2
 install:
-  - pip install -r travis/requirements.txt
+  - pip install -q Django==$DJANGO_VERSION
+  - python setup.py -q install
+  - pip install -r travis
 script:
   - python manage.py test home
