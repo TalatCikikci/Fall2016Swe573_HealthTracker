@@ -6,6 +6,6 @@ env:
 install:
   - pip install -q Django==$DJANGO_VERSION
 # - python setup.py -q install
-  - pip install -r travis
+# - pip install -r travis
 script:
   - python manage.py test home
