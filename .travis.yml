@@ -8,4 +8,4 @@ install:
 # - python setup.py -q install
 # - pip install -r travis
 script:
-  - python manage.py test home
+  - python fitster/manage.py test home
