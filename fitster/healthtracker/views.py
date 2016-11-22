@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login as auth_login
 
 from .models import Userprofile
 from .forms import UserForm, UserprofileForm
+import healthtracker.signals as signals
 
 # Create your views here.
 def index(request):
@@ -39,6 +40,7 @@ def signup(request):
                                      uform.cleaned_data['password'])
             djangouser.last_name = uform.cleaned_data['last_name']
             djangouser.first_name = uform.cleaned_data['first_name']
+            
             djangouser._dateofbirth = pform.cleaned_data['dateofbirth']
             djangouser._gender = pform.cleaned_data['gender']
             djangouser._height = pform.cleaned_data['height']
@@ -48,6 +50,14 @@ def signup(request):
                 djangouser._notes = pform.cleaned_data['notes']
             else:
                 djangouser._notes = ''
+
+            signals.user_initiated.send(sender=None, instance=djangouser,
+                                dateofbirth=djangouser._dateofbirth,
+                                gender=djangouser._gender,
+                                height=djangouser._height,
+                                weight=djangouser._weight,
+                                notes=djangouser._notes)
+            
             djangouser.save()
             return HttpResponseRedirect('..')
     else:

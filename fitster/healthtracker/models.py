@@ -5,6 +5,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
+import healthtracker.signals as signals
+
 # Create your models here.
 
 @python_2_unicode_compatible
@@ -21,12 +23,11 @@ class Userprofile(models.Model):
     notes = models.TextField(blank=True, null=True)
 
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_profile_creator")
-def create_user_profile(sender, instance, created, **kwargs):
-    if not created:
+@receiver(signals.user_initiated, dispatch_uid="user_initiator")
+def create_user_profile(instance, dateofbirth, gender, height, weight, notes, **kwargs):
         Userprofile.objects.create(user=instance,
-                                   dateofbirth = instance._dateofbirth,
-                                   gender = instance._gender,
-                                   height = instance._height,
-                                   weight = instance._weight,
-                                   notes = instance._notes)
+                                   dateofbirth = dateofbirth,
+                                   gender = gender,
+                                   height = height,
+                                   weight = weight,
+                                   notes = notes)
