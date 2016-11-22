@@ -1,29 +1,32 @@
 from django.db import models
+from django import forms
+from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
-@python_2_unicode_compatible
-class Userbasic(models.Model):
-    username = models.CharField(max_length=20, unique=True)
-    password = models.CharField(max_length=200)
-    active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.username
-
 
 @python_2_unicode_compatible
 class Userprofile(models.Model):
-    userbasic = models.ForeignKey(Userbasic, on_delete=models.CASCADE)
-    firstname = models.CharField(max_length=200)
-    lastname = models.CharField(max_length=200)
-    email = models.EmailField(max_length=200, unique=True)
-    dateofbirth = models.DateTimeField(default='1900-01-22 12:45:00.000000')
-    gender = models.CharField(max_length=1, choices=(('M', 'Male'),('F', 'Female')), default='F')
-    height = models.IntegerField(default=1)
-    weight = models.IntegerField(default=1)
-#    avatar = models.ImageField
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE, 
+                                related_name="userprofile")
+    dateofbirth = models.DateField()
+    gender = models.CharField(max_length=1, choices=(
+                                                    ('M', 'Male'),
+                                                    ('F', 'Female')))
+    height = models.PositiveIntegerField()
+    weight = models.PositiveIntegerField()
     notes = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return '%s %s %s %s' % (self.firstname, self.lastname, self.email, self.notes)
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL, dispatch_uid="user_profile_creator")
+def create_user_profile(sender, instance, created, **kwargs):
+    if not created:
+        Userprofile.objects.create(user=instance,
+                                   dateofbirth = instance._dateofbirth,
+                                   gender = instance._gender,
+                                   height = instance._height,
+                                   weight = instance._weight,
+                                   notes = instance._notes)

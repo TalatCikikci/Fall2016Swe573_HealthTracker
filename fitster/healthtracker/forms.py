@@ -1,21 +1,23 @@
 from django.forms import ModelForm
+from django.conf import settings
+from django.contrib.auth.models import User
 
-from .models import Userbasic, Userprofile
+from .models import Userprofile
 
-class UserbasicForm(ModelForm):
+class UserForm(ModelForm):
     class Meta:
-        model = Userbasic
+        model = User
         fields = ['username',
-                  'password'
+                  'password',
+                  'first_name',
+                  'last_name',
+                  'email'
                   ]
 
 class UserprofileForm(ModelForm):
     class Meta:
         model = Userprofile
-        fields = ['firstname',
-                  'lastname',
-                  'email',
-                  'dateofbirth',
+        fields = ['dateofbirth',
                   'gender',
                   'height',
                   'weight',
