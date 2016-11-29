@@ -1,1 +1,9 @@
-<h1>Fitster Profile Page</h1>
+{% extends 'healthtracker/base.html' %}
+
+{% block title %} {{ request.user.first_name }} - Home {% endblock %}
+
+{% block content %}
+  {% for entry in blog_entries %}
+    Welcome '{{ request.user.username }}'
+  {% endfor %}
+{% endblock %}

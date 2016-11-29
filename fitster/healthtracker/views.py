@@ -1,12 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.models import User, BaseUserManager, AbstractBaseUser
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 from .models import Userprofile
 from .forms import UserForm, UserprofileForm
 import healthtracker.signals as signals
+
 
 # Create your views here.
 def index(request):
@@ -14,19 +17,17 @@ def index(request):
                   'healthtracker/login.html'
                   )
 
+
 def login(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
     user = authenticate(username=username, password=password)
     if user is not None:
         auth_login(request, user)
-        return render(request,
-                  'healthtracker/profile.html'
-                  )
+        return redirect('/healthtracker/profile')
     else:
-        return render(request,
-                  'healthtracker/login.html'
-                  )
+        return redirect('/healthtracker')
+
 
 def signup(request):
     if request.method == "POST":
@@ -67,12 +68,15 @@ def signup(request):
                   'healthtracker/signup.html',
                   {'user_form':uform, 'userprofile_form':pform}
                   )
-                  
+
+@login_required
 def profile(request):
     return render(request, 'healthtracker/profile.html')
+
 
 def forgottenpassword(request):
     return render(request, 'healthtracker/forgottenpassword.html')
 
+
 def recoverpassword(request):
-    return render(request, 'healthtracker/login.html')
+    return redirect('/healthtracker')

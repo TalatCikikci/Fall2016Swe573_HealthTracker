@@ -137,3 +137,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+## Custom settings below this point
+
+# API Key to access USDA API
+USDA_API_KEY = 'DEMO_KEY'
+
+# Response format to be returned from USDA API
+USDA_RESPONSE_FORMAT = 'json'
+
+# USDA API base URL
+USDA_BASE_URL = 'http://api.nal.usda.gov/ndb'
