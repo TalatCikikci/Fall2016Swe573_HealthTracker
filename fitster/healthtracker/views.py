@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.models import User, BaseUserManager, AbstractBaseUser
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
@@ -23,10 +23,17 @@ def login(request):
     password = request.POST.get('password')
     user = authenticate(username=username, password=password)
     if user is not None:
+        # Using "login" here clashes with the view named "login" so we use "auth_login" instead.
         auth_login(request, user)
         return redirect('/healthtracker/profile')
     else:
         return redirect('/healthtracker')
+
+
+def logout(request):
+    # Using "logout" here clashes with the view named "logout" so we use "auth_logout" instead.
+    auth_logout(request)
+    return redirect('/healthtracker')
 
 
 def signup(request):
@@ -69,9 +76,14 @@ def signup(request):
                   {'user_form':uform, 'userprofile_form':pform}
                   )
 
+
 @login_required
 def profile(request):
     return render(request, 'healthtracker/profile.html')
+
+
+def editprofile(request):
+    return render(request, 'healthtracker/editprofile.html')
 
 
 def forgottenpassword(request):

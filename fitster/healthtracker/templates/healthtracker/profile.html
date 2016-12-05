@@ -1,6 +1,16 @@
 {% extends 'healthtracker/base.html' %}
 
-{% block title %} {{ request.user.first_name }} - Home {% endblock %}
+{% block title %} 
+    {{ request.user.first_name }} - Home 
+{% endblock %}
+
+{% block navbar_left %}
+    
+{% endblock %}
+
+{% block navbar_right %}
+    <li><a href="{% url 'healthtracker:editprofile' %}">Profile Settings</a></li>
+{% endblock %}
 
 {% block content %}
   {% for entry in blog_entries %}
