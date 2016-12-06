@@ -46,12 +46,14 @@ class ApiWrapper:
 	
 class UserUtils:
     
-    def __init__(self, user, height, weight):
+    # Initialize with a 'user' to play with its data.
+    def __init__(self, user):
         self.user = user
-        self.height = height
-        self.weight = weight
         
     def getBmi(self):
-        bmi = self.weight/pow(self.height,2)
+        height = self.user.userprofile.height
+        weight = self.user.userprofile.weight
+        # BMI = weight(kg) / height(m)^2
+        bmi = round(weight/pow(height/100,2),2)
         return bmi
         

@@ -8,6 +8,7 @@ from django.urls import reverse
 
 from .models import Userprofile
 from .forms import UserForm, UserprofileForm
+from .utils import UserUtils
 import healthtracker.signals as signals
 
 

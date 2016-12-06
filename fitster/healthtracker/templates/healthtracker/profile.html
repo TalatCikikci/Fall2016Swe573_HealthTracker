@@ -13,7 +13,16 @@
 {% endblock %}
 
 {% block content %}
-  {% for entry in blog_entries %}
-    Welcome '{{ request.user.username }}'
-  {% endfor %}
+<div class="container">
+  <div class="well">
+    <div>
+      Welcome  {% if request.user.date_joined.date is not now.date %} back {% endif %}{{ request.user.first_name }}!
+    </div>
+    <br>
+    <div>
+      Your current BMI is calculated to be {{ request.session.bmi }}
+    </div>
+  </div>
+</div>
+
 {% endblock %}

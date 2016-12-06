@@ -4,7 +4,9 @@ from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.contrib.auth import user_logged_in
 
+from .utils import UserUtils
 import healthtracker.signals as signals
 
 # Create your models here.
@@ -31,3 +33,10 @@ def create_user_profile(instance, dateofbirth, gender, height, weight, notes, **
                                    height = height,
                                    weight = weight,
                                    notes = notes)
+                                   
+
+@receiver(user_logged_in, dispatch_uid="bmi_calculator")
+def calculate_bmi(sender, request, user, **kwargs):
+    util = UserUtils(user)
+    
+    request.session['bmi'] = util.getBmi()
