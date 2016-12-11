@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from .models import Userprofile
 from .forms import UserForm, UserprofileForm
-from .utils import UserUtils
+from .utils import UserUtils, ApiWrapper
 import healthtracker.signals as signals
 
 
@@ -81,6 +81,30 @@ def signup(request):
 @login_required
 def profile(request):
     return render(request, 'healthtracker/profile.html')
+
+
+@login_required
+def searchmeal(request):
+    searchterm = request.POST.get('food')
+    wrapper = ApiWrapper()
+    wrapper.searchFood(searchterm)
+    return render(request, 'healthtracker/profile.html')
+#    return HttpResponseRedirect('/healthtracker/profile')
+
+
+@login_required
+def searchexercise(request):
+    return HttpResponseRedirect('/healthtracker/profile')
+
+
+@login_required
+def addmeal(request):
+    return render(request, 'healthtracker/profile.html')
+
+
+@login_required
+def addexercise(request):
+    return HttpResponseRedirect('/healthtracker/profile')
 
 
 def editprofile(request):

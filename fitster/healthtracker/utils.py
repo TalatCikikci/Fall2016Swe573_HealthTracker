@@ -15,7 +15,7 @@ class ApiWrapper:
         url_mask = '{}/{}/?format={}&api_key={}'
         forged_url = url_mask.format(self.base_url,
                                      operation, 
-                                     self.format, 
+                                     self.resp_format, 
                                      self.api_key)
         return forged_url
     
@@ -36,8 +36,9 @@ class ApiWrapper:
     def searchFood(self, search_item):
         operation = 'search'
         
-        search_url = forgeUrl(operation) + '&q={}'.format(search_item)
-        response = requestJson(search_url)
+        search_url = self.forgeUrl(operation) + '&q={}'.format(search_item)
+        print(search_url)
+        response = self.requestJson(search_url)
         response_list = response["list"]["item"]
 
         for item in response_list:
