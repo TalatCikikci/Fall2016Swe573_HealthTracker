@@ -25,7 +25,7 @@ SECRET_KEY = '@-g7o97pd-t95z1mn!&!&%f6&o=(((t#)-mb0ahh+%qal+n+6i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['52.11.65.78','127.0.0.1','localhost']
 
 
 # Application definition
@@ -138,6 +138,28 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
+
+# Logging 
+# https://docs.djangoproject.com/en/1.10/topics/logging/#configuring-logging
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django_debug.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 ## Custom settings below this point
 

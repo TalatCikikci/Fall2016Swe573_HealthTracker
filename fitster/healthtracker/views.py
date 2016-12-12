@@ -5,12 +5,15 @@ from django.contrib.auth.models import User, BaseUserManager, AbstractBaseUser
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+import logging
 
 from .models import Userprofile
 from .forms import UserForm, UserprofileForm
 from .utils import UserUtils, ApiWrapper
 import healthtracker.signals as signals
 
+
+logger = logging.getLogger('django')
 
 # Create your views here.
 def index(request):
@@ -22,31 +25,50 @@ def index(request):
 def login(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
+    
+    logger.info("Login request as" +
+                    "\n\tUsername: " + username
+                )
+    
     user = authenticate(username=username, password=password)
     if user is not None:
         # Using "login" here clashes with the view named "login" so we use "auth_login" instead.
         auth_login(request, user)
+        
+        logger.info("User succesfully logged in as " + user.username)
+        
         return redirect('/healthtracker/profile')
     else:
+        
+        logger.info("User authentication failed with given credentials!")
+        
         return redirect('/healthtracker')
 
 
 def logout(request):
+    logger.info("Logging out...")
     # Using "logout" here clashes with the view named "logout" so we use "auth_logout" instead.
     auth_logout(request)
+    logger.info("User " + request.user.username + " logged out.")
     return redirect('/healthtracker')
 
 
 def signup(request):
     if request.method == "POST":
+        logger.info("Processing signup request...")
         uform = UserForm(request.POST, instance=User())
         pform = UserprofileForm(request.POST, instance=Userprofile())
+
+        logger.info("New signup request.")
 
         if uform.is_valid() and pform.is_valid():
             email = BaseUserManager.normalize_email(uform.cleaned_data['email'])
             djangouser = User.objects.create_user(uform.cleaned_data['username'],
                                      email,
                                      uform.cleaned_data['password'])
+            
+            logger.debug("User created in database as " + djangouser.username)
+            
             djangouser.last_name = uform.cleaned_data['last_name']
             djangouser.first_name = uform.cleaned_data['first_name']
             
@@ -60,6 +82,18 @@ def signup(request):
             else:
                 djangouser._notes = ''
 
+            logger.debug("Signup request processed with the following info:" +
+                            "\n\t Username: " + djangouser.username +
+                            "\n\t Email: " + djangouser.email +
+                            "\n\t First Name: " + djangouser.first_name +
+                            "\n\t Last Name: " + djangouser.last_name +
+                            "\n\t Date of Birth: " + str(djangouser._dateofbirth) +
+                            "\n\t Gender: " + djangouser._gender +
+                            "\n\t Height: " + str(djangouser._height) +
+                            "\n\t Weight: " + str(djangouser._weight) +
+                            "\n\t Notes: " + djangouser._notes
+                        )
+            logger.debug("Sending 'user_initiated' signal...")
             signals.user_initiated.send(sender=None, instance=djangouser,
                                 dateofbirth=djangouser._dateofbirth,
                                 gender=djangouser._gender,
@@ -68,8 +102,10 @@ def signup(request):
                                 notes=djangouser._notes)
             
             djangouser.save()
+            logger.debug("User creation successful.")
             return HttpResponseRedirect('..')
     else:
+        logger.info("Loading signup page...")
         uform = UserForm(instance=User())
         pform = UserprofileForm(instance=Userprofile())
     return render(request,
@@ -80,11 +116,13 @@ def signup(request):
 
 @login_required
 def profile(request):
+    logger.info("Loading profile page...")
     return render(request, 'healthtracker/profile.html')
 
 
 @login_required
 def searchmeal(request):
+    logger.info("Querying food...")
     searchterm = request.POST.get('food')
     wrapper = ApiWrapper()
     wrapper.searchFood(searchterm)
@@ -94,26 +132,32 @@ def searchmeal(request):
 
 @login_required
 def searchexercise(request):
+    logger.info("Querying exercise...")
     return HttpResponseRedirect('/healthtracker/profile')
 
 
 @login_required
 def addmeal(request):
+    logger.info("Adding meal...")
     return render(request, 'healthtracker/profile.html')
 
 
 @login_required
 def addexercise(request):
+    logger.info("Adding exercise...")
     return HttpResponseRedirect('/healthtracker/profile')
 
 
 def editprofile(request):
+    logger.info("Loading edit profile page...")
     return render(request, 'healthtracker/editprofile.html')
 
 
 def forgottenpassword(request):
+    logger.info("Loading forgotten password...")
     return render(request, 'healthtracker/forgottenpassword.html')
 
 
 def recoverpassword(request):
+    logger.info("Recovering password...")
     return redirect('/healthtracker')
