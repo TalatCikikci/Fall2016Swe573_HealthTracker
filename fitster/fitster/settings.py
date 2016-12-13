@@ -173,3 +173,7 @@ USDA_RESPONSE_FORMAT = 'json'
 
 # USDA API base URL
 USDA_BASE_URL = 'http://api.nal.usda.gov/ndb'
+
+# Activity JSONs
+ACTIVITY_JSON = 'activity.json'
+ACTIVITY_GROUP_JSON = 'activityGroup.json'

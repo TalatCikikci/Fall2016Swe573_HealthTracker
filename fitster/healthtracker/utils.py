@@ -1,6 +1,8 @@
 import requests
 import math
 import logging
+import os
+import json
 from django.conf import settings
 
 
@@ -13,6 +15,8 @@ class ApiWrapper:
         self.api_key = settings.USDA_API_KEY
         self.base_url = settings.USDA_BASE_URL
         self.resp_format = settings.USDA_RESPONSE_FORMAT
+        self.activity_file = settings.ACTIVITY_JSON
+        self.activity_group_file = settings.ACTIVITY_GROUP_JSON
         logger.debug("API Wrapper object initializing with" +
                         "\n\tAPI Key: " +
                         self.api_key +
@@ -93,7 +97,24 @@ class ApiWrapper:
             logger.debug(str(item["name"]) + " : " + str(item["value"]) + str(item["unit"]))
             
         return report_list
-
+        
+    def getActivities(self):
+        activity_file = self.activity_file
+        module_dir = os.path.dirname(__file__)  # get current directory
+        file_path = os.path.join(module_dir, activity_file)
+        with open(file_path) as json_data:
+            d = json.load(json_data)
+            return d
+        
+    def getActivityGroups(self):
+        activity_group_file = self.activity_group_file
+        module_dir = os.path.dirname(__file__)  # get current directory
+        file_path = os.path.join(module_dir, activity_group_file)
+        with open(file_path) as json_data:
+            d = json.load(json_data)
+            return d
+        
+        
 class UserUtils:
     
     # Initialize with a 'user' to play with its data.

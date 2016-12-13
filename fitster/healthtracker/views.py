@@ -156,8 +156,16 @@ def fooddetails(request, ndbno):
 
 @login_required
 def searchexercise(request):
-    logger.info("Querying exercise...")
-    return render(request, 'healthtracker/searchexercise.html')
+    if request.method == "POST":
+        return render(request, 'healthtracker/profile.html')
+    else:
+        logger.info("Querying exercise...")
+        wrapper = ApiWrapper()
+        activities = wrapper.getActivities
+        activityGroups = wrapper.getActivityGroups
+        request.activities = activities
+        request.activityGroups = activityGroups
+        return render(request, 'healthtracker/searchexercise.html')
 
 
 @login_required
