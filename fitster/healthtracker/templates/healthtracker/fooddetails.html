@@ -1,0 +1,77 @@
+{% extends 'healthtracker/base.html' %}
+
+{% block title %} 
+    Fitster - Food Details - {{ request.report.name }}
+{% endblock %}
+
+{% block navbar_left %}
+    <li><a href="{% url 'healthtracker:searchmeal' %}">Search Meal</a></li>
+    <li><a href="{% url 'healthtracker:searchexercise' %}">Search Exercise</a></li>
+{% endblock %}
+
+{% block navbar_right %}
+    <li><a href="{% url 'healthtracker:editprofile' %}">Profile Settings</a></li>
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="col-md-6">
+      <div class="well">
+        <h2>{{ request.report.name }}</h2>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="well">
+        <form class="form-group" action="{% url 'healthtracker:fooddetails' request.ndbno %}" method="post">
+          {% csrf_token %}
+          <h2 class="form-heading">Add Food</h2>
+          <label for="quantity" class="sr-only">Quantity</label>
+          <input type="text" id="quantity" name="quantity" class="form-control" placeholder="Enter quantity...">
+          <select class="form-control" name="unit">
+            {% for measure in request.measures %} 
+            <option value="{{ measure.label }}">{{ measure.label }}</option>
+            {% empty %}
+            <option value="none">Units</option>
+            {% endfor %}
+          </select>
+          <br>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Nutrient Info</div>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered table-striped">
+            {% if request.report %}
+            <thead>
+              <tr>
+                <th>Nutrient Name</th>
+                <th>Value(per 100g of food)</th>
+              </tr>
+            </thead>
+            {% endif %}
+            <tbody>
+              {% for nutrient in request.report.nutrients %}
+              <tr>
+                <td>
+                  {{ nutrient.name }}
+                </td>
+                <td>
+                  {{ nutrient.value }}{{ nutrient.unit }}
+                </td>
+              </tr>
+              {% empty %}
+              Sorry, no results found.
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

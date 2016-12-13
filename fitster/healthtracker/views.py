@@ -122,32 +122,57 @@ def profile(request):
 
 @login_required
 def searchmeal(request):
-    logger.info("Querying food...")
-    searchterm = request.POST.get('food')
-    wrapper = ApiWrapper()
-    wrapper.searchFood(searchterm)
-    return render(request, 'healthtracker/profile.html')
+    if request.method == "POST":
+        logger.info("Food query results returned.")
+        searchterm = request.POST.get('food')
+        wrapper = ApiWrapper()
+        results = wrapper.searchFood(searchterm)
+        request.results = results
+        return render(request, 'healthtracker/searchmeal.html')
+    else:
+        logger.info("Search food page accessed.")
+        return render(request, 'healthtracker/searchmeal.html')
 #    return HttpResponseRedirect('/healthtracker/profile')
 
+@login_required
+def fooddetails(request, ndbno):
+    if request.method == "POST":
+        unit = request.POST.get('unit')
+        quantity = request.POST.get('quantity')
+        ndbno = ndbno
+        logger.info("Added " + str(quantity) + " " + str(unit) + "(s) of " + ndbno )
+        request.notification = 'Added {} {}(s) of {}.'.format(quantity,unit,ndbno)
+        return render(request, 'healthtracker/profile.html')
+    else:
+        request.ndbno = ndbno
+        logger.info("Food details for " + ndbno)
+        wrapper = ApiWrapper()
+        report = wrapper.getFoodReport(ndbno)
+        request.report = report
+        measures = report["nutrients"][0]["measures"]
+        request.measures = measures
+        return render(request, 'healthtracker/fooddetails.html')
+        
 
 @login_required
 def searchexercise(request):
     logger.info("Querying exercise...")
-    return HttpResponseRedirect('/healthtracker/profile')
+    return render(request, 'healthtracker/searchexercise.html')
 
 
 @login_required
 def addmeal(request):
     logger.info("Adding meal...")
-    return render(request, 'healthtracker/profile.html')
+    return render(request, 'healthtracker/addmeal.html')
 
 
 @login_required
 def addexercise(request):
     logger.info("Adding exercise...")
-    return HttpResponseRedirect('/healthtracker/profile')
+    return render(request, 'healthtracker/addexercise.html')
 
 
+@login_required
 def editprofile(request):
     logger.info("Loading edit profile page...")
     return render(request, 'healthtracker/editprofile.html')

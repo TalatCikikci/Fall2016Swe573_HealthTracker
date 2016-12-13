@@ -48,9 +48,11 @@ class ApiWrapper:
         return response_json
     
     def searchFood(self, search_item):
+        logger.info("Querying food...")
         operation = 'search'
+        data_source = 'Standard Reference'
         
-        search_url = self.forgeUrl(operation) + '&q={}'.format(search_item)
+        search_url = self.forgeUrl(operation) + '&q={}'.format(search_item) + '&ds={}'.format(data_source)
         
         logger.info("API Query URL: " + search_url)
         
@@ -64,8 +66,34 @@ class ApiWrapper:
         for item in response_list:
             print(item["name"])
             logger.debug(item["name"])
-	
-	
+        
+        return response_list
+        
+    def getFoodReport(self, food_ndbno):
+        ndbno = food_ndbno
+        logger.info("Querying food details for" + str(ndbno) + "...")
+        operation = 'reports'
+        report_type = 'f'
+        
+        report_url = self.forgeUrl(operation) + '&ndbno={}'.format(ndbno) + '&type={}'.format(report_type)
+        
+        logger.info("API Query URL: " + report_url)
+        
+        report = self.requestJson(report_url)
+        
+        try:
+            report_list = report["report"]["food"]
+        except KeyError:
+            report_list = []
+            
+        logger.debug("\nQuery results:\n")
+        
+        for item in report_list["nutrients"]:
+            print(str(item["name"]) + " : " + str(item["value"]) + str(item["unit"]))
+            logger.debug(str(item["name"]) + " : " + str(item["value"]) + str(item["unit"]))
+            
+        return report_list
+
 class UserUtils:
     
     # Initialize with a 'user' to play with its data.

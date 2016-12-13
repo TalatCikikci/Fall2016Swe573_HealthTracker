@@ -13,43 +13,9 @@
     <li><a href="{% url 'healthtracker:editprofile' %}">Profile Settings</a></li>
 {% endblock %}
 
-{% block notification %}
-  <div class="panel panel-success">
-    <div class="panel-heading">Success</div>
-    <div class="panel-body">{{ request.notification }}</div>
-  </div>
-{% endblock %}
-
 {% block content %}
 <div class="container">
-  <div class="well">
-    <div>
-      <h1>
-        Welcome back {{ request.user.first_name }}!
-      </h1>
-    </div>
-    <br>
-    <div>
-      Your current BMI is calculated to be {{ request.session.bmi }}
-    </div>
-  </div>
-</div>
-
-
-<div class="container">
-  <div class="col-md-6">
-    <div class="well">
-      <form class="form-group" action="{% url 'healthtracker:searchmeal' %}" method="post">
-          {% csrf_token %}
-          <h2 class="form-heading">Query Food</h2>
-          <label for="food" class="sr-only">Food</label>
-          <input type="text" id="food" name="food" class="form-control" placeholder="Enter food...">
-          <br>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
-  <div class="col-md-6">
+  <div class="col-md-6 col-md-offset-3">
     <div class="well">
       <form class="form-group" action="{% url 'healthtracker:searchexercise' %}" method="post">
           {% csrf_token %}
@@ -62,5 +28,4 @@
     </div>
   </div>
 </div>
-
 {% endblock %}

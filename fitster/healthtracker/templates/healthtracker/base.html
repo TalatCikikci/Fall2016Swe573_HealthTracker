@@ -50,6 +50,10 @@
         </div><!--/.nav-collapse -->
     </div>
   </nav>
+  {% if request.notification %}
+  {% block notification %}
+  {% endblock %}
+  {% endif %}
   </div>
     <div id="content">
         {% block content %}

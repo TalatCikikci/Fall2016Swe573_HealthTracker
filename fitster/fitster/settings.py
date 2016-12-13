@@ -52,7 +52,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'fitster.urls'
 
-LOGIN_REDIRECT_URL = 'profile'
+LOGIN_URL = '/healthtracker/'
+LOGIN_REDIRECT_URL = '/healthtracker/'
 
 TEMPLATES = [
     {
@@ -165,6 +166,7 @@ LOGGING = {
 
 # API Key to access USDA API
 USDA_API_KEY = 'DEMO_KEY'
+#USDA_API_KEY = 'DtFfmTivnG1A1cJ6hr5o7CjE0WPZu8DcuqnfxWyD'
 
 # Response format to be returned from USDA API
 USDA_RESPONSE_FORMAT = 'json'

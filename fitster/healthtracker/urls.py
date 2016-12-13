@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^searchmeal/$', views.searchmeal, name='searchmeal'),
     url(r'^searchexercise/$', views.searchexercise, name='searchexercise'),
+    url(r'^fooddetails/(?P<ndbno>[0-9]+)/$', views.fooddetails, name='fooddetails'),
     url(r'^addmeal/$', views.addmeal, name='addmeal'),
     url(r'^addexercise/$', views.addexercise, name='addexercise'),
     url(r'^editprofile/$', views.editprofile, name='editprofile'),
