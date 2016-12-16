@@ -98,10 +98,9 @@ class ApiWrapper:
             
         return report_list
         
-    def getActivities(self):
-        activity_file = self.activity_file
+    def getActivities(self, json_file):
         module_dir = os.path.dirname(__file__)  # get current directory
-        file_path = os.path.join(module_dir, activity_file)
+        file_path = os.path.join(module_dir, json_file)
         with open(file_path) as json_data:
             d = json.load(json_data)
             return d
