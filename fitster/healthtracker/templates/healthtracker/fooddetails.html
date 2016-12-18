@@ -4,15 +4,6 @@
     Fitster - Food Details - {{ request.report.name }}
 {% endblock %}
 
-{% block navbar_left %}
-    <li><a href="{% url 'healthtracker:searchmeal' %}">Add Meal</a></li>
-    <li><a href="{% url 'healthtracker:searchexercise' %}">Add Exercise</a></li>
-{% endblock %}
-
-{% block navbar_right %}
-    <li><a href="{% url 'healthtracker:editprofile' %}">Profile Settings</a></li>
-{% endblock %}
-
 {% block content %}
   <div class="container">
     <div class="col-md-6">

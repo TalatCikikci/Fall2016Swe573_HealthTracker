@@ -4,15 +4,6 @@
     {{ request.user.first_name }} - Home 
 {% endblock %}
 
-{% block navbar_left %}
-    <li><a href="{% url 'healthtracker:searchmeal' %}">Add Meal</a></li>
-    <li><a href="{% url 'healthtracker:searchexercise' %}">Add Exercise</a></li>
-{% endblock %}
-
-{% block navbar_right %}
-    <li><a href="{% url 'healthtracker:editprofile' %}">Profile Settings</a></li>
-{% endblock %}
-
 {% block notification %}
   {% if request.notification %}
   <div class="panel panel-success">
@@ -63,13 +54,13 @@
     <div class="well">
       <form class="form-group" 
             action="{% url 'healthtracker:searchexercise' %}" 
-            method="post">
+            method="get">
           {% csrf_token %}
           <h2 class="form-heading">Query Exercise</h2>
           <label for="exercise" 
                  class="sr-only">Exercise</label>
           <input type="text" 
-                 id="exercise" 
+                 id="exercise"
                  name="exercise" 
                  class="form-control" 
                  placeholder="Enter exercise...">
@@ -80,5 +71,29 @@
     </div>
   </div>
 </div>
+
+<div class="container">
+  <div class="col-md-6">
+    <div class="well">
+      <form class="form-group" 
+            action="{% url 'healthtracker:searchmeal' %}" 
+            method="post">
+          {% csrf_token %}
+          <h2 class="form-heading">Today's Consumption</h2>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="well">
+      <form class="form-group" 
+            action="{% url 'healthtracker:searchexercise' %}" 
+            method="get">
+          {% csrf_token %}
+          <h2 class="form-heading">Today's Exercises</h2>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}
