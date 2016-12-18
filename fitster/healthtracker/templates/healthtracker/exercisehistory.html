@@ -6,4 +6,64 @@
 
 {% block content %}
 
+<div class="container">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="well">
+      <h2 class="form-heading">Activity History</h2>
+    </div>
+  </div>
+</div>
+
+{% if history is not None %}
+  <div class="container">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">Activity History</div>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered table-striped">
+            {% if history %}
+            <thead>
+              <tr>
+                <th>Activity Name</th>
+                <th>Duration</th>
+                <th>Calories Burned</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            {% endif %}
+            <tbody>
+              {% for item in history %}
+              <tr>
+                <td>
+                  <div>
+                      {{ item.item_name }}
+                  </div>
+                </td>
+                <td>
+                  <div>
+                      {{ item.item_quantity }} {{ item.item_unit }}
+                  </div>
+                </td>
+                <td>
+                  <div>
+                      
+                  </div>
+                </td>
+                <td>
+                  <div>
+                      {{ item.item_date }}
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              Sorry, no results found.
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
 {% endblock %}

@@ -204,7 +204,6 @@ def searchexercise(request):
         itemname = itemno_and_itemname.split('_')[1]
         itemunit = 'minutes'
         itemquantity = request.POST.get('duration')
-        itemname = request.POST.get('exercise')
         itemdate = datetime.datetime.strptime(request.POST['date'], "%m/%d/%Y")
         signals.item_added.send(sender=None,
                             itemno=itemno,
@@ -234,6 +233,16 @@ def searchexercise(request):
         request.activityGroups = activityGroups
         return render(request, 'healthtracker/searchexercise.html')
 
+
+@login_required
+def foodhistory(request):
+    uid = request.user.id
+    return render(request, 'healthtracker/foodhistory.html', {'history':Userhistory.objects.filter(user_id=uid, item_no__gt=821)})
+
+@login_required
+def exercisehistory(request):
+    uid = request.user.id
+    return render(request, 'healthtracker/exercisehistory.html', {'history':Userhistory.objects.filter(user_id=uid, item_no__lte=821)})
 
 # Deprecated
 @login_required

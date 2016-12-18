@@ -57,8 +57,8 @@
             {% block navbar_left %}
             <li><a href="{% url 'healthtracker:searchmeal' %}">Add Meal</a></li>
             <li><a href="{% url 'healthtracker:searchexercise' %}">Add Exercise</a></li>
-            <li><a href="{% url 'healthtracker:searchmeal' %}">Consumption History</a></li>
-            <li><a href="{% url 'healthtracker:searchexercise' %}">Exercise History</a></li>
+            <li><a href="{% url 'healthtracker:foodhistory' %}">Consumption History</a></li>
+            <li><a href="{% url 'healthtracker:exercisehistory' %}">Exercise History</a></li>
             {% endblock %}
           </ul>
           <ul class="nav navbar-nav navbar-right">
