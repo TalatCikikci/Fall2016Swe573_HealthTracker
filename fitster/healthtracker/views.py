@@ -159,28 +159,28 @@ def searchmeal(request):
 def fooddetails(request, ndbno):
     
     if request.method == "POST":
-        unit = request.POST.get('unit')
-        quantity = request.POST.get('quantity')
+        itemno = ndbno
+        itemunit = request.POST.get('unit')
+        itemquantity = request.POST.get('quantity')
         itemname = request.POST.get('itemname')
-        date = datetime.datetime.strptime(request.POST['date'], "%m/%d/%Y")
+        itemdate = datetime.datetime.strptime(request.POST['date'], "%m/%d/%Y")
         signals.item_added.send(sender=None,
-                            itemno=ndbno,
+                            itemno=itemno,
                             itemname=itemname,
-                            itemquantity=quantity,
-                            itemunit=unit, 
-                            itemdate=date,
+                            itemquantity=itemquantity,
+                            itemunit=itemunit, 
+                            itemdate=itemdate,
                             userid= request.user.id)
-        
         logger.info("Added " + 
-                    str(quantity) + 
+                    str(itemquantity) + 
                     " " + 
-                    str(unit) + 
+                    str(itemunit) + 
                     "(s) of " + 
                     itemname + 
                     " (ndbno = " 
-                    + ndbno + 
+                    + itemno + 
                     ").")
-        request.notification = 'Added {} {}(s) of {}.'.format(quantity,unit,itemname)
+        request.notification = 'Added {} {}(s) of "{}".'.format(itemquantity,itemunit,itemname)
         return render(request, 'healthtracker/profile.html')
     
     else:
@@ -199,13 +199,37 @@ def fooddetails(request, ndbno):
 def searchexercise(request):
     
     if request.method == "POST":
+        itemno_and_itemname = request.POST.get('exercise')
+        itemno = itemno_and_itemname.split('_')[0]
+        itemname = itemno_and_itemname.split('_')[1]
+        itemunit = 'minutes'
+        itemquantity = request.POST.get('duration')
+        itemname = request.POST.get('exercise')
+        itemdate = datetime.datetime.strptime(request.POST['date'], "%m/%d/%Y")
+        signals.item_added.send(sender=None,
+                            itemno=itemno,
+                            itemname=itemname,
+                            itemquantity=itemquantity,
+                            itemunit=itemunit, 
+                            itemdate=itemdate,
+                            userid= request.user.id)
+        logger.info("Added " + 
+                    str(itemquantity) + 
+                    " " + 
+                    str(itemunit) + 
+                    "(s) of " + 
+                    itemname + 
+                    " (activity = " 
+                    + itemno + 
+                    ").")
+        request.notification = 'Added {} {}(s) of "{}".'.format(itemquantity,itemunit,itemname)
         return render(request, 'healthtracker/profile.html')
     
     else:
         logger.info("Querying exercise...")
         wrapper = ApiWrapper()
-        activities = wrapper.getActivities
-        activityGroups = wrapper.getActivityGroups
+        activities = wrapper.getActivities()
+        activityGroups = wrapper.getActivityGroups()
         request.activities = activities
         request.activityGroups = activityGroups
         return render(request, 'healthtracker/searchexercise.html')

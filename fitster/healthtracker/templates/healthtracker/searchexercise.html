@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block navbar_left %}
-    <li><a href="{% url 'healthtracker:searchmeal' %}">Search Meal</a></li>
-    <li><a href="{% url 'healthtracker:searchexercise' %}">Search Exercise</a></li>
+    <li><a href="{% url 'healthtracker:searchmeal' %}">Add Meal</a></li>
+    <li><a href="{% url 'healthtracker:searchexercise' %}">Add Exercise</a></li>
 {% endblock %}
 
 {% block navbar_right %}
@@ -21,22 +21,30 @@
             action="{% url 'healthtracker:searchexercise' %}" 
             method="post">
           {% csrf_token %}
-          <h2 class="form-heading">Query Exercise</h2>
+          <h2 class="form-heading">Add Exercise</h2>
+          <p><input type="text" 
+                    name="date"
+                    class="form-control" 
+                    id="datepicker"
+                    placeholder="Select date..."></p>
+          <p><input type="text" 
+                 id="duration" 
+                 name="duration" 
+                 class="form-control" 
+                 placeholder="Enter exercise duration in minutes..." 
+                 autofocus=""></p>
           <label for="exercise" 
                  class="sr-only">Exercise</label>
-          <input type="text" 
-                 id="exercise" 
-                 name="exercise" 
-                 class="form-control" 
-                 placeholder="Enter exercise time..." 
-                 autofocus="">
-          <br>
-          <select class="form-control" 
-                  name="unit">
+          <select class="form-control"
+                  id="exercise"
+                  name="exercise">
+            <option value="" 
+                    disabled 
+                    selected>Select an exercise...</option>
             {% for exercise in request.activities %} 
-            <option value="{{ exercise.Description }}">{{ exercise.Description }}</option>
+            <option value="{{ exercise.id }}_{{ exercise.Description }}">{{ exercise.Description }}</option>
             {% empty %}
-            <option value="none">No Exercise</option>
+            <option value="0">No exercises found</option>
             {% endfor %}
           </select>
           <br>

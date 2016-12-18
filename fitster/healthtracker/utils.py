@@ -124,10 +124,11 @@ class ApiWrapper:
 
 
     # Load the list of activities from a JSON file on the server.
-    def getActivities(self, json_file):
+    def getActivities(self):
         
+        activity_file = self.activity_file
         module_dir = os.path.dirname(__file__)  # get current directory
-        file_path = os.path.join(module_dir, json_file)
+        file_path = os.path.join(module_dir, activity_file)
         with open(file_path) as json_data:
             d = json.load(json_data)
             return d
