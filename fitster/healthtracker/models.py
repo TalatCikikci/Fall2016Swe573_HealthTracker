@@ -28,21 +28,21 @@ class Userprofile(models.Model):
 class Userhistory(models.Model):
     userid = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.CASCADE)
-    logged_item = models.models.IntegerField()
+    logged_item = models.IntegerField()
     item_quantity = models.IntegerField()
-    quantity_unit = models.CharField()
+    quantity_unit = models.CharField(max_length=50)
     history_date = models.DateField()
 
 
-class Userrecipe(model.Model):
+class Userrecipe(models.Model):
     userid = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               on_Delete=models.CASCADE)
+                               on_delete=models.CASCADE)
     recipe_name = models.CharField(max_length=100)
 
 
 class Recipeitems(models.Model):
     recipeid = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                 on_Delete=models.CASCADE)
+                                 on_delete=models.CASCADE)
     item_ndbno = models.IntegerField()
     item_quantity = models.IntegerField()
 

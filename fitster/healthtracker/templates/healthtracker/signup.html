@@ -1,8 +1,10 @@
-<head>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-</head>
+{% extends 'healthtracker/outbase.html' %}
 
+{% block title %} 
+    Fitster - Sign Up 
+{% endblock %}
+
+{% block content %}
 <div class="container">
   <form class="form-horizontal" action="{% url 'healthtracker:signup' %}" method="post">
     {% csrf_token %}
@@ -16,3 +18,4 @@
       <button class="btn btn-primary btn-block" type="submit">Register</button>
   </form>
 </div>
+{% endblock %}

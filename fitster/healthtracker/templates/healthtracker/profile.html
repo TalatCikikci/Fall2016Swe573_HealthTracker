@@ -14,10 +14,12 @@
 {% endblock %}
 
 {% block notification %}
+  {% if request.notification %}
   <div class="panel panel-success">
     <div class="panel-heading">Success</div>
     <div class="panel-body">{{ request.notification }}</div>
   </div>
+  {% endif %}
 {% endblock %}
 
 {% block content %}

@@ -139,7 +139,6 @@ def fooddetails(request, ndbno):
     if request.method == "POST":
         unit = request.POST.get('unit')
         quantity = request.POST.get('quantity')
-        ndbno = ndbno
         logger.info("Added " + str(quantity) + " " + str(unit) + "(s) of " + ndbno )
         request.notification = 'Added {} {}(s) of {}.'.format(quantity,unit,ndbno)
         return render(request, 'healthtracker/profile.html')
