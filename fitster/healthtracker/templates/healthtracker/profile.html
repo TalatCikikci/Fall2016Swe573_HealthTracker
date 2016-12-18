@@ -41,25 +41,41 @@
 <div class="container">
   <div class="col-md-6">
     <div class="well">
-      <form class="form-group" action="{% url 'healthtracker:searchmeal' %}" method="post">
+      <form class="form-group" 
+            action="{% url 'healthtracker:searchmeal' %}" 
+            method="post">
           {% csrf_token %}
           <h2 class="form-heading">Query Food</h2>
-          <label for="food" class="sr-only">Food</label>
-          <input type="text" id="food" name="food" class="form-control" placeholder="Enter food...">
+          <label for="food" 
+                 class="sr-only">Food</label>
+          <input type="text" 
+                 id="food" 
+                 name="food" 
+                 class="form-control" 
+                 placeholder="Enter food...">
           <br>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
+          <button class="btn btn-lg btn-primary btn-block" 
+                  type="submit">Search</button>
       </form>
     </div>
   </div>
   <div class="col-md-6">
     <div class="well">
-      <form class="form-group" action="{% url 'healthtracker:searchexercise' %}" method="post">
+      <form class="form-group" 
+            action="{% url 'healthtracker:searchexercise' %}" 
+            method="post">
           {% csrf_token %}
           <h2 class="form-heading">Query Exercise</h2>
-          <label for="exercise" class="sr-only">Exercise</label>
-          <input type="text" id="exercise" name="exercise" class="form-control" placeholder="Enter exercise...">
+          <label for="exercise" 
+                 class="sr-only">Exercise</label>
+          <input type="text" 
+                 id="exercise" 
+                 name="exercise" 
+                 class="form-control" 
+                 placeholder="Enter exercise...">
           <br>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
+          <button class="btn btn-lg btn-primary btn-block" 
+                  type="submit">Search</button>
       </form>
     </div>
   </div>

@@ -127,7 +127,14 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Europe/Istanbul'
 
-USE_I18N = True
+DATE_INPUT_FORMATS = (
+    '%d.%m.%Y', '%d.%m.%Y', '%d.%m.%y',  # '25.10.2006', '25.10.2006', '25.10.06'
+    '%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y',  # '25-10-2006', '25/10/2006', '25/10/06'
+    '%d %b %Y',  # '25 Oct 2006', 
+    '%d %B %Y',  # '25 October 2006', 
+    )
+
+USE_I18N = False
 
 USE_L10N = True
 

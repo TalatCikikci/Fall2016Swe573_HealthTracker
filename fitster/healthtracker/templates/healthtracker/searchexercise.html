@@ -17,12 +17,22 @@
 <div class="container">
   <div class="col-md-6 col-md-offset-3">
     <div class="well">
-      <form class="form-group" action="{% url 'healthtracker:searchexercise' %}" method="post">
+      <form class="form-group" 
+            action="{% url 'healthtracker:searchexercise' %}" 
+            method="post">
           {% csrf_token %}
           <h2 class="form-heading">Query Exercise</h2>
-          <label for="exercise" class="sr-only">Exercise</label>
-          <input type="text" id="exercise" name="exercise" class="form-control" placeholder="Enter exercise time...">
-          <select class="form-control" name="unit">
+          <label for="exercise" 
+                 class="sr-only">Exercise</label>
+          <input type="text" 
+                 id="exercise" 
+                 name="exercise" 
+                 class="form-control" 
+                 placeholder="Enter exercise time..." 
+                 autofocus="">
+          <br>
+          <select class="form-control" 
+                  name="unit">
             {% for exercise in request.activities %} 
             <option value="{{ exercise.Description }}">{{ exercise.Description }}</option>
             {% empty %}
@@ -30,7 +40,8 @@
             {% endfor %}
           </select>
           <br>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+          <button class="btn btn-lg btn-primary btn-block" 
+                  type="submit">Add</button>
       </form>
     </div>
   </div>

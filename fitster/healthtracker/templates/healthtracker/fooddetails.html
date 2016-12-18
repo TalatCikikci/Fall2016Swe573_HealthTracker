@@ -22,12 +22,30 @@
     </div>
     <div class="col-md-3">
       <div class="well">
-        <form class="form-group" action="{% url 'healthtracker:fooddetails' request.ndbno %}" method="post">
+        <form class="form-group" 
+              action="{% url 'healthtracker:fooddetails' request.ndbno %}" 
+              method="post">
           {% csrf_token %}
           <h2 class="form-heading">Add Food</h2>
-          <label for="quantity" class="sr-only">Quantity</label>
-          <input type="text" id="quantity" name="quantity" class="form-control" placeholder="Enter quantity...">
-          <select class="form-control" name="unit">
+          <p><input type="text" 
+                          name="date"
+                          class="form-control" 
+                          id="datepicker"
+                          placeholder="Select date..."></p>
+          <label for="quantity" 
+                 class="sr-only">Quantity</label>
+          <input type="text" 
+                 id="quantity" 
+                 name="quantity" 
+                 class="form-control" 
+                 placeholder="Enter quantity..." 
+                 autofocus="">
+          <input type="hidden" 
+                 name="itemname" 
+                 value="{{ request.report.name }}">
+          <br>
+          <select class="form-control" 
+                  name="unit">
             {% for measure in request.measures %} 
             <option value="{{ measure.label }}">{{ measure.label }}</option>
             {% empty %}
@@ -35,7 +53,8 @@
             {% endfor %}
           </select>
           <br>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+          <button class="btn btn-lg btn-primary btn-block" 
+                  type="submit">Add</button>
         </form>
       </div>
     </div>

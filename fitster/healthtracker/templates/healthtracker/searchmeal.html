@@ -17,13 +17,22 @@
 <div class="container">
   <div class="col-md-6 col-md-offset-3">
     <div class="well">
-      <form class="form-group" action="{% url 'healthtracker:searchmeal' %}" method="post">
+      <form class="form-group" 
+            action="{% url 'healthtracker:searchmeal' %}" 
+            method="post">
           {% csrf_token %}
           <h2 class="form-heading">Query Food</h2>
-          <label for="food" class="sr-only">Food</label>
-          <input type="text" id="food" name="food" class="form-control" placeholder="Enter food...">
+          <label for="food" 
+                 class="sr-only">Food</label>
+          <input type="text" 
+                 id="food" 
+                 name="food" 
+                 class="form-control" 
+                 placeholder="Enter food..."
+                 autofocus="">
           <br>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Search</button>
+          <button class="btn btn-lg btn-primary btn-block" 
+                  type="submit">Search</button>
       </form>
     </div>
   </div>

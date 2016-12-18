@@ -18,6 +18,15 @@
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
             crossorigin="anonymous">
             </script>
+    <link rel="stylesheet" 
+          href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+            $( function() {
+              $( "#datepicker" ).datepicker();
+            } );
+    </script>
     <title>{% block title %}Fitster, the Healthtracker{% endblock %}</title>
 </head>
 
@@ -26,7 +35,9 @@
   <nav class="navbar navbar-default">
     <div class="container-fluid" id="navbar">
           <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <button type="button" class="navbar-toggle collapsed" 
+                    data-toggle="collapse" data-target="#navbar" 
+                    aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -34,8 +45,7 @@
             </button>
             <a href="{% url 'healthtracker:profile' %}" class="navbar-brand">
               <img src="{% static "healthtracker/logo.png" %}"
-                   alt="Your Fitster Home"
-                   />
+                   alt="Your Fitster Home"/>
             </a>
           </div>
           <div id="navbar" class="collapse navbar-collapse">
@@ -52,10 +62,8 @@
         </div><!--/.nav-collapse -->
     </div>
   </nav>
-  {% if request.notification %}
   {% block notification %}
   {% endblock %}
-  {% endif %}
   </div>
   <div id="content">
       {% block content %}
