@@ -20,8 +20,8 @@ class Userprofile(models.Model):
     gender = models.CharField(max_length=1, choices=(
                                                     ('M', 'Male'),
                                                     ('F', 'Female')))
-    height = models.PositiveIntegerField()
-    weight = models.PositiveIntegerField()
+    height = models.PositiveIntegerField(help_text='Measured in (cm)')
+    weight = models.PositiveIntegerField(help_text='Measured in (cm)')
     notes = models.TextField(blank=True, null=True)
 
 
@@ -45,7 +45,7 @@ class Userrecipe(models.Model):
 
 # Recipeitems keeps the ingredients of a recipe and relates them.
 class Recipeitems(models.Model):
-    recipeid = models.ForeignKey(settings.AUTH_USER_MODEL,
+    recipeid = models.ForeignKey(Userrecipe,
                                  on_delete=models.CASCADE)
     item_ndbno = models.IntegerField()
     item_quantity = models.IntegerField()
