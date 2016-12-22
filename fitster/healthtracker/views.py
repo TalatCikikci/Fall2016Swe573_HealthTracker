@@ -131,8 +131,17 @@ def signup(request):
 @login_required
 def profile(request):
     
+    uid = request.user.id
     logger.info("Loading profile page...")
-    return render(request, 'healthtracker/profile.html')
+    return render(request, 
+                  'healthtracker/profile.html', 
+                  {'recentfoodhistory':Userhistory.objects.filter(user_id=uid, 
+                                                        item_no__gt=821, 
+                                                        item_date=datetime.date.today()), 
+                   'recentexercisehistory':Userhistory.objects.filter(user_id=uid, 
+                                                        item_no__lte=821, 
+                                                        item_date=datetime.date.today())}
+                  )
 
 
 # Quries the API for the submitted keyword. Displays the result as a list.
@@ -237,12 +246,56 @@ def searchexercise(request):
 @login_required
 def foodhistory(request):
     uid = request.user.id
-    return render(request, 'healthtracker/foodhistory.html', {'history':Userhistory.objects.filter(user_id=uid, item_no__gt=821)})
+    if request.method == "POST":
+        search_date = request.POST.get('date')
+        if search_date:
+            query_date = datetime.datetime.strptime(search_date, "%m/%d/%Y")
+            return render(request, 
+                  'healthtracker/foodhistory.html', 
+                  {'history':Userhistory.objects.filter(user_id=uid, 
+                                                        item_no__gt=821,
+                                                        item_date=query_date)}
+            )
+        else:
+            return render(request, 
+                  'healthtracker/foodhistory.html', 
+                  {'history':Userhistory.objects.filter(user_id=uid, 
+                                                        item_no__gt=821)}
+            )
+        
+    else:
+        return render(request, 
+                  'healthtracker/foodhistory.html', 
+                  {'history':Userhistory.objects.filter(user_id=uid, 
+                                                        item_no__gt=821)}
+                  )
 
 @login_required
 def exercisehistory(request):
     uid = request.user.id
-    return render(request, 'healthtracker/exercisehistory.html', {'history':Userhistory.objects.filter(user_id=uid, item_no__lte=821)})
+    if request.method == "POST":
+        search_date = request.POST.get('date')
+        if search_date:
+            query_date = datetime.datetime.strptime(search_date, "%m/%d/%Y")
+            return render(request, 
+                  'healthtracker/exercisehistory.html', 
+                  {'history':Userhistory.objects.filter(user_id=uid, 
+                                                        item_no__lte=821,
+                                                        item_date=query_date)}
+            )
+        else:
+            return render(request, 
+                  'healthtracker/exercisehistory.html', 
+                  {'history':Userhistory.objects.filter(user_id=uid, 
+                                                        item_no__lte=821)}
+            )
+        
+    else:
+        return render(request, 
+                  'healthtracker/exercisehistory.html', 
+                  {'history':Userhistory.objects.filter(user_id=uid, 
+                                                        item_no__lte=821)}
+                  )
 
 # Deprecated
 @login_required

@@ -55,7 +55,6 @@
       <form class="form-group" 
             action="{% url 'healthtracker:searchexercise' %}" 
             method="get">
-          {% csrf_token %}
           <h2 class="form-heading">Query Exercise</h2>
           <label for="exercise" 
                  class="sr-only">Exercise</label>
@@ -80,6 +79,42 @@
             method="post">
           {% csrf_token %}
           <h2 class="form-heading">Today's Consumption</h2>
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped">
+              {% if recentfoodhistory %}
+              <thead>
+                <tr>
+                  <th>Food Name</th>
+                  <th>Amount Consumed</th>
+                  <th>Calories Gained</th>
+                </tr>
+              </thead>
+              {% endif %}
+              <tbody>
+                {% for item in recentfoodhistory %}
+                <tr>
+                  <td>
+                    <div>
+                        {{ item.item_name }}
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                        {{ item.item_quantity }} {{ item_unit }}
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                        
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                Sorry, no results found.
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
       </form>
     </div>
   </div>
@@ -90,6 +125,42 @@
             method="get">
           {% csrf_token %}
           <h2 class="form-heading">Today's Exercises</h2>
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped">
+              {% if recentexercisehistory %}
+              <thead>
+                <tr>
+                  <th>Activity Name</th>
+                  <th>Duration</th>
+                  <th>Calories Burned</th>
+                </tr>
+              </thead>
+              {% endif %}
+              <tbody>
+                {% for item in recentexercisehistory %}
+                <tr>
+                  <td>
+                    <div>
+                        {{ item.item_name }}
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                        {{ item.item_quantity }} {{ item.item_unit }}
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                        
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                Sorry, no results found.
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
       </form>
     </div>
   </div>

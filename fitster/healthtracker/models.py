@@ -21,7 +21,7 @@ class Userprofile(models.Model):
                                                     ('M', 'Male'),
                                                     ('F', 'Female')))
     height = models.PositiveIntegerField(help_text='Measured in (cm)')
-    weight = models.PositiveIntegerField(help_text='Measured in (cm)')
+    weight = models.PositiveIntegerField(help_text='Measured in (kg)')
     notes = models.TextField(blank=True, null=True)
 
 
