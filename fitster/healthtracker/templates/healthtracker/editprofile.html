@@ -4,6 +4,41 @@
     {{ request.user.first_name }} - Edit Profile
 {% endblock %}
 
-{% block content %}
+{% block notification %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="panel panel-danger">
+        <div class="panel-heading">Error</div>
+        <div class="panel-body">{{ message }}</div>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endblock %}
 
+{% block content %}
+<div class="container">
+  <div class="col-md-6 col-md-offset-3">
+    <form class="form-horizontal" 
+          action="{% url 'healthtracker:editprofile' %}" 
+          method="post">
+      {% csrf_token %}
+        <h2>Change Password</h2>
+        <p>After changing you password, you will be asked to login with your new password!</p>
+          <div>
+            {{ password_form }}
+          </div>
+        <br/>
+        <button class="btn btn-primary btn-block" 
+                type="submit">Change Password</button>
+    </form>
+    <br>
+    <form class="form-horizontal" 
+          action="{% url 'healthtracker:profile' %}" 
+          method="get">
+      <button class="btn btn-primary btn-block" 
+              type="submit" 
+              onclick="">Back</button>
+    </form>
+  </div>
+</div>
 {% endblock %}

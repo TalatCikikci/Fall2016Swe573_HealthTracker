@@ -5,11 +5,13 @@
 {% endblock %}
 
 {% block notification %}
-  {% if request.notification %}
-  <div class="panel panel-success">
-    <div class="panel-heading">Success</div>
-    <div class="panel-body">{{ request.notification }}</div>
-  </div>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="panel panel-success">
+        <div class="panel-heading">Success</div>
+        <div class="panel-body">{{ message }}</div>
+      </div>
+    {% endfor %}
   {% endif %}
 {% endblock %}
 
@@ -23,7 +25,7 @@
     </div>
     <br>
     <div>
-      Your current BMI is calculated to be {{ request.session.bmi }}
+      Your current BMI is calculated to be {{ request.session.bmi|floatformat }}
     </div>
   </div>
 </div>

@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
-from django.contrib.auth.models import User, BaseUserManager, AbstractBaseUser
+from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.contrib.auth.models import User, BaseUserManager, AbstractBaseUser
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import logging, datetime
 
 from .models import Userprofile, Userhistory, Userrecipe, Recipeitems
-from .forms import UserForm, UserprofileForm
+from .forms import UserForm, UserprofileForm, ChangepasswordForm
 from .utils import UserUtils, ApiWrapper
 import healthtracker.signals as signals
 
@@ -189,8 +190,12 @@ def fooddetails(request, ndbno):
                     " (ndbno = " 
                     + itemno + 
                     ").")
-        request.notification = 'Added {} {}(s) of "{}".'.format(itemquantity,itemunit,itemname)
-        return render(request, 'healthtracker/profile.html')
+        messages.add_message(request, 
+                             messages.INFO, 
+                             "Added {} {}(s) of '{}'.".format(itemquantity,
+                                                              itemunit,
+                                                              itemname))
+        return redirect('/healthtracker/profile')
     
     else:
         request.ndbno = ndbno
@@ -230,8 +235,12 @@ def searchexercise(request):
                     " (activity = " 
                     + itemno + 
                     ").")
-        request.notification = 'Added {} {}(s) of "{}".'.format(itemquantity,itemunit,itemname)
-        return render(request, 'healthtracker/profile.html')
+        messages.add_message(request, 
+                             messages.INFO, 
+                             "Added {} {}(s) of '{}'.".format(itemquantity,
+                                                              itemunit,
+                                                              itemname))
+        return redirect('/healthtracker/profile')
     
     else:
         logger.info("Querying exercise...")
@@ -317,8 +326,33 @@ def addexercise(request):
 @login_required
 def editprofile(request):
     
-    logger.info("Loading edit profile page...")
-    return render(request, 'healthtracker/editprofile.html')
+    if request.method == "POST":
+        logger.info("Changing password of user" + request.user.username)
+        password_form = ChangepasswordForm(request.POST, instance=User())
+        
+        if password_form.is_valid():
+            djangouser = User.objects.get(id=request.user.id)
+            djangouser.set_password(password_form.cleaned_data['password'])
+            djangouser.save()
+            messages.add_message(request, 
+                                 messages.INFO, 
+                                 "Password changed succesfully!")
+            return redirect('/healthtracker/profile')
+        
+        else:
+            messages.add_message(request, 
+                                 messages.INFO, 
+                                 "Passwords do not match!")
+            return redirect('/healthtracker/editprofile')
+        
+    else:
+        logger.info("Loading edit profile page...")
+        
+        password_form = ChangepasswordForm(instance=User())
+        return render(request,
+                  'healthtracker/editprofile.html',
+                  {'password_form':password_form}
+                  )
 
 
 # Displays the forgotten password page.
