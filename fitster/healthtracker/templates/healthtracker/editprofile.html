@@ -17,7 +17,29 @@
 
 {% block content %}
 <div class="container">
-  <div class="col-md-6 col-md-offset-3">
+  <div class="col-md-6">
+    <!-- <form class="form-horizontal" 
+          action="{% url 'healthtracker:editprofile' %}" 
+          method="post">
+      {% csrf_token %}
+        <h2>Change Profile Information</h2>
+          <div>
+            {{ password_form }}
+          </div>
+        <br/>
+        <button class="btn btn-primary btn-block" 
+                type="submit">Change Password</button>
+    </form>
+    <br>
+    <form class="form-horizontal" 
+          action="{% url 'healthtracker:profile' %}" 
+          method="get">
+      <button class="btn btn-primary btn-block" 
+              type="submit" 
+              onclick="">Back</button>
+    </form> -->
+  </div>
+  <div class="col-md-6">
     <form class="form-horizontal" 
           action="{% url 'healthtracker:editprofile' %}" 
           method="post">
