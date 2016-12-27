@@ -36,7 +36,7 @@ class SignupTests(TestCase):
         created_user = User.objects.get(username="talatusername")
         user_entries = Userprofile.objects.filter(user_id=created_user.id)
         
-        self.assertEquals(len(user_entries),1)
+        self.assertEqual(len(user_entries),1)
 
 
     def test_check_gender_correct_during_signup(self):
@@ -66,7 +66,7 @@ class SignupTests(TestCase):
         created_user = User.objects.get(username="talatusername")
         user_entry = Userprofile.objects.get(user_id=created_user.id)
         
-        self.assertEquals(user_entry.gender,"M")
+        self.assertEqual(user_entry.gender,"M")
 
 
     def test_check_weight_correct_during_signup(self):
@@ -96,7 +96,7 @@ class SignupTests(TestCase):
         created_user = User.objects.get(username="talatusername")
         user_entry = Userprofile.objects.get(user_id=created_user.id)
         
-        self.assertEquals(user_entry.weight,80)
+        self.assertEqual(user_entry.weight,80)
 
 
     def test_check_height_correct_during_signup(self):
@@ -126,7 +126,7 @@ class SignupTests(TestCase):
         created_user = User.objects.get(username="talatusername")
         user_entry = Userprofile.objects.get(user_id=created_user.id)
         
-        self.assertEquals(user_entry.height,182)
+        self.assertEqual(user_entry.height,182)
 
 
     def test_check_notes_correct_during_signup(self):
@@ -156,7 +156,7 @@ class SignupTests(TestCase):
         created_user = User.objects.get(username="talatusername")
         user_entry = Userprofile.objects.get(user_id=created_user.id)
         
-        self.assertEquals(user_entry.notes,"User's notes.")
+        self.assertEqual(user_entry.notes,"User's notes.")
 
 
     def test_check_birthday_correct_during_signup(self):
@@ -186,7 +186,7 @@ class SignupTests(TestCase):
         created_user = User.objects.get(username="talatusername")
         user_entry = Userprofile.objects.get(user_id=created_user.id)
         
-        self.assertEquals(user_entry.dateofbirth,datetime.date.today())
+        self.assertEqual(user_entry.dateofbirth,datetime.date.today())
 
 
     def test_check_password_is_not_plaintext(self):
@@ -215,4 +215,4 @@ class SignupTests(TestCase):
         
         created_user = User.objects.get(username="talatusername")
         
-        self.assertNotEquals(created_user.password,"talatpassword")
+        self.assertNotEqual(created_user.password,"talatpassword")
