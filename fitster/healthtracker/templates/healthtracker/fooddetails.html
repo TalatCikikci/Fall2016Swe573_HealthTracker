@@ -22,7 +22,8 @@
                           name="date"
                           class="form-control" 
                           id="datepicker"
-                          placeholder="Select date..."></p>
+                          placeholder="Select date..."
+                          required=""></p>
           <label for="quantity" 
                  class="sr-only">Quantity</label>
           <input type="text" 
@@ -30,7 +31,8 @@
                  name="quantity" 
                  class="form-control" 
                  placeholder="Enter quantity..." 
-                 autofocus="">
+                 autofocus=""
+                 required="">
           <input type="hidden" 
                  name="itemname" 
                  value="{{ request.report.name }}">
