@@ -30,6 +30,7 @@
                      class="form-control" 
                      id="datepicker"
                      placeholder="Select date...">
+                     <br/>
               <button class="btn btn-lg btn-primary btn-block" 
                       type="submit">Search</button>
           </form>
@@ -61,7 +62,13 @@
                 </td>
                 <td>
                   <div>
-                      
+                    {% for record in calories %}
+                      {% if item.id == record.history_item_id %}
+                        {{ record.item_calories }}
+                      {% endif %}
+                    {% empty %}
+                    N/A
+                    {% endfor %}
                   </div>
                 </td>
                 <td>

@@ -26,7 +26,7 @@
                           required=""></p>
           <label for="quantity" 
                  class="sr-only">Quantity</label>
-          <input type="text" 
+          <input type="number" 
                  id="quantity" 
                  name="quantity" 
                  class="form-control" 
@@ -38,9 +38,9 @@
                  value="{{ request.report.name }}">
           <br>
           <select class="form-control" 
-                  name="unit">
+                  name="unitmodifier">
             {% for measure in request.measures %} 
-            <option value="{{ measure.label }}">{{ measure.label }}</option>
+            <option value="{{ measure.label }}|{{ measure.eqv }}">{{ measure.label }}</option>
             {% empty %}
             <option value="none">Units</option>
             {% endfor %}

@@ -25,6 +25,14 @@
     </div>
     <br>
     <div>
+      <h4>
+        <font color="green">
+          "{{ quotetext }}" -{{ quoteauthor }} 
+        </font>
+      </h4>
+    </div>
+    <br>
+    <div>
       Your current BMI is calculated to be {{ request.session.bmi|floatformat }}
     </div>
   </div>
@@ -102,12 +110,18 @@
                   </td>
                   <td>
                     <div>
-                        {{ item.item_quantity }} {{ item_unit }}
+                        {{ item.item_quantity }} {{ item.item_unit }}
                     </div>
                   </td>
                   <td>
                     <div>
-                        
+                        {% for record in recentcalories %}
+                          {% if item.id == record.history_item_id %}
+                            {{ record.item_calories }}
+                          {% endif %}
+                        {% empty %}
+                        N/A
+                        {% endfor %}
                     </div>
                   </td>
                 </tr>
@@ -153,7 +167,13 @@
                   </td>
                   <td>
                     <div>
-                        
+                      {% for record in recentcalories %}
+                        {% if item.id == record.history_item_id %}
+                          {{ record.item_calories }}
+                        {% endif %}
+                      {% empty %}
+                      N/A
+                      {% endfor %}
                     </div>
                   </td>
                 </tr>

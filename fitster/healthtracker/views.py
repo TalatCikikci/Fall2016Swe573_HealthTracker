@@ -6,11 +6,11 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 from django.contrib.auth.models import User, BaseUserManager, AbstractBaseUser
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-import logging, datetime
+import logging, datetime, random
 
-from .models import Userprofile, Userhistory, Userrecipe, Recipeitems
+from .models import Userprofile, Userhistory, Userrecipe, Recipeitems, Itemcalories
 from .forms import UserForm, UserprofileForm, ChangepasswordForm
-from .utils import UserUtils, ApiWrapper
+from .utils import UserUtils, ApiWrapper, QuoteHandler
 import healthtracker.signals as signals
 
 # Initialize the logger object
@@ -134,6 +134,14 @@ def profile(request):
     
     uid = request.user.id
     logger.info("Loading profile page...")
+    quoter = QuoteHandler()
+    quotedict = quoter.getQuotes()
+    quoteid = random.randint(1,102)
+    for quote in quotedict:
+        if quote["id"] == quoteid:
+            randomquotetext = quote["text"]
+            randomquoteauthor = quote["owner"]
+    logger.info("Generated quote: '" + randomquotetext + "' -" + randomquoteauthor)
     return render(request, 
                   'healthtracker/profile.html', 
                   {'recentfoodhistory':Userhistory.objects.filter(user_id=uid, 
@@ -141,8 +149,10 @@ def profile(request):
                                                         item_date=datetime.date.today()), 
                    'recentexercisehistory':Userhistory.objects.filter(user_id=uid, 
                                                         item_no__lte=821, 
-                                                        item_date=datetime.date.today())}
-                  )
+                                                        item_date=datetime.date.today()),
+                   'recentcalories':Itemcalories.objects.all(),
+                   'quotetext':randomquotetext,
+                   'quoteauthor':randomquoteauthor})
 
 
 # Quries the API for the submitted keyword. Displays the result as a list.
@@ -170,17 +180,33 @@ def fooddetails(request, ndbno):
     
     if request.method == "POST":
         itemno = ndbno
-        itemunit = request.POST.get('unit')
-        itemquantity = request.POST.get('quantity')
+        unitmodifier = request.POST.get('unitmodifier')
+        if unitmodifier == 'none':
+            itemunit = "units"
+            itemmodifier = 100
+        else:
+            unitmodifierlist = unitmodifier.split('|')
+            itemunit = unitmodifierlist[0]
+            itemmodifier = float(unitmodifierlist[1])
+        itemquantity = float(request.POST.get('quantity'))
         itemname = request.POST.get('itemname')
         itemdate = datetime.datetime.strptime(request.POST['date'], "%m/%d/%Y")
+        wrapper = ApiWrapper()
+        report = wrapper.getFoodReport(ndbno)
+        kcal = wrapper.getCalories(report)
+        historyitem = signals.item_add_requested.send(sender=None,
+                                                       itemno=itemno,
+                                                       itemname=itemname,
+                                                       itemquantity=itemquantity,
+                                                       itemunit=itemunit,
+                                                       itemmodifier=itemmodifier,
+                                                       itemdate=itemdate,
+                                                       userid=request.user.id)
         signals.item_added.send(sender=None,
-                            itemno=itemno,
-                            itemname=itemname,
-                            itemquantity=itemquantity,
-                            itemunit=itemunit, 
-                            itemdate=itemdate,
-                            userid= request.user.id)
+                                historyitem=historyitem[0][1],
+                                itemcalories=kcal,
+                                itemquantity=itemquantity,
+                                itemmodifier=itemmodifier)
         logger.info("Added " + 
                     str(itemquantity) + 
                     " " + 
@@ -214,18 +240,26 @@ def searchexercise(request):
     
     if request.method == "POST":
         itemno_and_itemname = request.POST.get('exercise')
-        itemno = itemno_and_itemname.split('_')[0]
-        itemname = itemno_and_itemname.split('_')[1]
+        itemno_and_itemname_list = itemno_and_itemname.split('|')
+        itemno = itemno_and_itemname_list[0]
+        itemname = itemno_and_itemname_list[1]
+        itemmodifier = float(itemno_and_itemname_list[2])
         itemunit = 'minutes'
-        itemquantity = request.POST.get('duration')
+        itemquantity = float(request.POST.get('duration'))
         itemdate = datetime.datetime.strptime(request.POST['date'], "%m/%d/%Y")
+        historyitem = signals.item_add_requested.send(sender=None,
+                                        itemno=itemno,
+                                        itemname=itemname,
+                                        itemquantity=itemquantity,
+                                        itemunit=itemunit,
+                                        itemmodifier=itemmodifier,
+                                        itemdate=itemdate,
+                                        userid=request.user.id)
         signals.item_added.send(sender=None,
-                            itemno=itemno,
-                            itemname=itemname,
-                            itemquantity=itemquantity,
-                            itemunit=itemunit, 
-                            itemdate=itemdate,
-                            userid= request.user.id)
+                                historyitem=historyitem[0][1],
+                                itemcalories=request.user.userprofile.weight*100,
+                                itemquantity=itemquantity/60,
+                                itemmodifier=itemmodifier)
         logger.info("Added " + 
                     str(itemquantity) + 
                     " " + 
@@ -255,56 +289,72 @@ def searchexercise(request):
 @login_required
 def foodhistory(request):
     uid = request.user.id
+    calorie_dict = Itemcalories.objects.all()
     if request.method == "POST":
         search_date = request.POST.get('date')
         if search_date:
             query_date = datetime.datetime.strptime(search_date, "%m/%d/%Y")
+            userhistory_dict = Userhistory.objects.filter(user_id=uid, 
+                                                          item_no__gt=821,
+                                                          item_date=query_date)
             return render(request, 
-                  'healthtracker/foodhistory.html', 
-                  {'history':Userhistory.objects.filter(user_id=uid, 
-                                                        item_no__gt=821,
-                                                        item_date=query_date)}
+                          'healthtracker/foodhistory.html', 
+                          {'history':userhistory_dict,
+                           'calories':calorie_dict}
             )
         else:
+            userhistory_dict = Userhistory.objects.filter(user_id=uid, 
+                                                          item_no__gt=821)
             return render(request, 
-                  'healthtracker/foodhistory.html', 
-                  {'history':Userhistory.objects.filter(user_id=uid, 
-                                                        item_no__gt=821)}
+                          'healthtracker/foodhistory.html', 
+                          {'history':userhistory_dict,
+                           'calories':calorie_dict}
             )
         
     else:
+        userhistory_dict = Userhistory.objects.filter(user_id=uid, 
+                                                      item_no__gt=821)
         return render(request, 
-                  'healthtracker/foodhistory.html', 
-                  {'history':Userhistory.objects.filter(user_id=uid, 
-                                                        item_no__gt=821)}
-                  )
+                      'healthtracker/foodhistory.html', 
+                      {'history':userhistory_dict,
+                       'calories':calorie_dict}
+        )
+
 
 @login_required
 def exercisehistory(request):
     uid = request.user.id
+    calorie_dict = Itemcalories.objects.all()
     if request.method == "POST":
         search_date = request.POST.get('date')
         if search_date:
             query_date = datetime.datetime.strptime(search_date, "%m/%d/%Y")
+            userhistory_dict = Userhistory.objects.filter(user_id=uid, 
+                                                          item_no__lte=821,
+                                                          item_date=query_date)
             return render(request, 
                   'healthtracker/exercisehistory.html', 
-                  {'history':Userhistory.objects.filter(user_id=uid, 
-                                                        item_no__lte=821,
-                                                        item_date=query_date)}
+                  {'history':userhistory_dict,
+                   'calories':calorie_dict}
             )
         else:
+            userhistory_dict = Userhistory.objects.filter(user_id=uid, 
+                                                          item_no__lte=821)
             return render(request, 
                   'healthtracker/exercisehistory.html', 
-                  {'history':Userhistory.objects.filter(user_id=uid, 
-                                                        item_no__lte=821)}
+                  {'history':userhistory_dict,
+                   'calories':calorie_dict}
             )
         
     else:
+        userhistory_dict = Userhistory.objects.filter(user_id=uid, 
+                                                      item_no__lte=821)
         return render(request, 
                   'healthtracker/exercisehistory.html', 
-                  {'history':Userhistory.objects.filter(user_id=uid, 
-                                                        item_no__lte=821)}
-                  )
+                  {'history':userhistory_dict,
+                   'calories':calorie_dict}
+        )
+
 
 # Deprecated
 @login_required

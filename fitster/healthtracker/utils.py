@@ -22,6 +22,7 @@ class ApiWrapper:
         self.resp_format = settings.USDA_RESPONSE_FORMAT
         self.activity_file = settings.ACTIVITY_JSON
         self.activity_group_file = settings.ACTIVITY_GROUP_JSON
+        self.nutrients_file = settings.NUTRIENTS_JSON
         logger.debug("API Wrapper object initializing with" +
                         "\n\tAPI Key: " +
                         self.api_key +
@@ -91,6 +92,21 @@ class ApiWrapper:
         return response_list
 
 
+    def getCalories(self, search_results):
+        calories = self.getNutrientValue(search_results,208)
+        return calories
+
+
+    def getNutrientValue(self,search_results,nutrient_id):
+        nutrients_list = search_results["nutrients"]
+        for nutrient in nutrients_list:
+            if nutrient["nutrient_id"] == nutrient_id:
+                nutrient_value = nutrient["value"]
+        if not nutrient_value:
+            nutrient_value = 0
+        return nutrient_value 
+
+
     # Query the API for nutrient information of the related ndbno.
     def getFoodReport(self, food_ndbno):
         
@@ -145,6 +161,17 @@ class ApiWrapper:
             return d
 
 
+    # Load the list of nutrients from a JSON file on the server.
+    def getNutrients(self):
+        
+        nutrients_file = self.nutrients_file
+        module_dir = os.path.dirname(__file__) # get current directory
+        file_path = os.path.join(module_dir, nutrients_file)
+        with open(file_path) as json_data:
+            d = json.load(json_data)
+            return d
+
+
 # UserUtils class has methods to manage backend operations related to the user.
 class UserUtils:
     
@@ -172,3 +199,21 @@ class UserUtils:
                      str(bmi))
         
         return bmi
+
+
+# QuoteHandler class is responsible of displaying inspirational quotes.
+class QuoteHandler:
+    
+    # Initialize with the quote file.
+    def __init__(self):
+        self.quotes_file = settings.QUOTES_JSON
+        
+    # Load the list of quptes from a JSON file on the server.
+    def getQuotes(self):
+        
+        quotes_file = self.quotes_file
+        module_dir = os.path.dirname(__file__)  # get current directory
+        file_path = os.path.join(module_dir, quotes_file)
+        with open(file_path) as json_data:
+            d = json.load(json_data)
+            return d

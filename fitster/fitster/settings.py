@@ -186,8 +186,8 @@ LOGGING = {
 ## Custom settings below this point
 
 # API Key to access USDA API
-USDA_API_KEY = 'DEMO_KEY'
-#USDA_API_KEY = 'DtFfmTivnG1A1cJ6hr5o7CjE0WPZu8DcuqnfxWyD'
+#USDA_API_KEY = 'DEMO_KEY'
+USDA_API_KEY = 'DtFfmTivnG1A1cJ6hr5o7CjE0WPZu8DcuqnfxWyD'
 
 # Response format to be returned from USDA API
 USDA_RESPONSE_FORMAT = 'json'
@@ -195,6 +195,8 @@ USDA_RESPONSE_FORMAT = 'json'
 # USDA API base URL
 USDA_BASE_URL = 'http://api.nal.usda.gov/ndb'
 
-# Activity JSONs
+# Resource JSONs
 ACTIVITY_JSON = 'activity.json'
 ACTIVITY_GROUP_JSON = 'activityGroup.json'
+NUTRIENTS_JSON = 'nutrients.json'
+QUOTES_JSON = 'quotes.json'

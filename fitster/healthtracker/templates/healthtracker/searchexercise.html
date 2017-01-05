@@ -19,7 +19,8 @@
                     id="datepicker"
                     placeholder="Select date..."
                     required=""></p>
-          <p><input type="text" 
+          <p><input type="number"
+                 min="0"
                  id="duration" 
                  name="duration" 
                  class="form-control" 
@@ -35,7 +36,7 @@
                     disabled 
                     selected>Select an exercise...</option>
             {% for exercise in request.activities %} 
-            <option value="{{ exercise.id }}_{{ exercise.Description }}">{{ exercise.Description }}</option>
+            <option value="{{ exercise.id }}|{{ exercise.Description }}|{{ exercise.METS }}">{{ exercise.Description }}</option>
             {% empty %}
             <option value="0">No exercises found</option>
             {% endfor %}

@@ -17,38 +17,56 @@ class Userprofile(models.Model):
                                 on_delete=models.CASCADE, 
                                 related_name="userprofile")
     dateofbirth = models.DateField()
-    gender = models.CharField(max_length=1, choices=(
-                                                    ('M', 'Male'),
-                                                    ('F', 'Female')))
+    gender = models.CharField(max_length=1, 
+                              choices=(('M', 'Male'),
+                                       ('F', 'Female')))
     height = models.PositiveIntegerField(help_text='Measured in (cm)')
     weight = models.PositiveIntegerField(help_text='Measured in (kg)')
-    notes = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, 
+                             null=True)
 
 
 # Userhistory model keeps track of any food or activity the user has saved.
 class Userhistory(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               on_delete=models.CASCADE)
+                             on_delete=models.CASCADE)
     item_no = models.IntegerField()
     item_name = models.CharField(max_length=200)
     item_quantity = models.IntegerField()
     item_unit = models.CharField(max_length=50)
+    item_unit_modifier = models.DecimalField(max_digits=6, 
+                                             decimal_places=1)
     item_date = models.DateField()
 
 
 # Userrecipe holds any recipes created by users and relates them.
 class Userrecipe(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                               on_delete=models.CASCADE)
+                             on_delete=models.CASCADE)
     recipe_name = models.CharField(max_length=100)
 
 
 # Recipeitems keeps the ingredients of a recipe and relates them.
 class Recipeitems(models.Model):
-    recipeid = models.ForeignKey(Userrecipe,
-                                 on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Userrecipe,
+                               on_delete=models.CASCADE)
     item_ndbno = models.IntegerField()
     item_quantity = models.IntegerField()
+
+
+# Itemcalories keeps the calorie values of history items.
+class Itemcalories(models.Model):
+    history_item = models.ForeignKey(Userhistory,
+                                     on_delete=models.CASCADE)
+    item_calories = models.DecimalField(max_digits=6, 
+                                        decimal_places=1)
+
+
+# Recipeitems keeps the nutrient values of history items.
+class Itemnutrients(models.Model):
+    history_item = models.ForeignKey(Userhistory,
+                                     on_delete=models.CASCADE)
+    item_nutrientdict = models.IntegerField()
 
 
 # Following are the signal reciever implementations.
@@ -74,11 +92,21 @@ def calculate_bmi(sender, request, user, **kwargs):
 
 # record_history method creates a Userhistory object and fills in the 
 # related database tables when a user saves an activity or food.
-@receiver(signals.item_added, dispatch_uid="item_adder")
-def record_history(itemno, itemname, itemquantity, itemunit, itemdate, userid, **kwargs):
-    Userhistory.objects.create(item_no = itemno,
-                            item_name = itemname,
-                            item_quantity=itemquantity,
-                            item_unit=itemunit,
-                            item_date=itemdate,
-                            user_id=userid)
+@receiver(signals.item_add_requested, dispatch_uid="item_logger")
+def record_history(itemno, itemname, itemquantity, itemunit, itemmodifier, itemdate, userid, **kwargs):
+    history_item = Userhistory.objects.create(item_no = itemno,
+                                              item_name = itemname,
+                                              item_quantity=itemquantity,
+                                              item_unit=itemunit,
+                                              item_unit_modifier=itemmodifier,
+                                              item_date=itemdate,
+                                              user_id=userid)
+    return history_item
+
+# record_calories method created an Itemcalories object and fills in the 
+# related database tables when an item is successfully logged to the database.
+@receiver(signals.item_added, dispatch_uid="item_calorie_adder")
+def record_calories(historyitem, itemcalories, itemquantity, itemmodifier, **kwargs):
+    itemcalories = (itemcalories/100)*itemmodifier*itemquantity
+    Itemcalories.objects.create(history_item = historyitem,
+                                item_calories = itemcalories)
